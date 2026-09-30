@@ -33,3 +33,73 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .link { border: none; background: none; color: var(--brand); cursor: pointer; padding: 0; }
 .page-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--muted); }
 .error-text { color: #b42318; }
+
+/* ---- 内窥检测：管段报告 / 待复核 / 报告详情 ---- */
+.stat-card.stat-warn { border-color: #f0b429; background: #fffaeb; }
+.stat-card.stat-danger { border-color: #d92d20; background: #fef3f2; }
+.tab-bar { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); margin-bottom: 12px; flex-wrap: wrap; }
+.tab-item { border: none; background: none; padding: 8px 14px; font-size: 14px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tab-item.active { color: var(--brand); border-bottom-color: var(--brand); font-weight: 600; }
+.tab-badge { display: inline-block; min-width: 18px; padding: 0 5px; margin-left: 4px; border-radius: 9px; background: #fee4e2; color: #b42318; font-size: 11px; line-height: 18px; text-align: center; }
+.version-switch { margin-left: auto; display: flex; align-items: center; gap: 6px; padding-bottom: 6px; }
+.version-label { font-size: 12px; color: var(--muted); }
+.version-btn { border: 1px solid var(--border); background: #fff; border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
+.version-btn.active { border-color: var(--brand); color: var(--brand); background: #eff6ff; }
+.rule-note { font-size: 12px; color: var(--muted); background: #f1f5f9; border-radius: 6px; padding: 8px 10px; margin: 0 0 12px; }
+.rule-note strong { color: #b42318; }
+
+.segment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
+.segment-card { background: #fff; border: 1px solid var(--border); border-left-width: 4px; border-radius: 8px; padding: 12px 14px; }
+.segment-card.rising { border-left-color: #d92d20; box-shadow: 0 0 0 1px #fecdca inset; background: #fffbfa; }
+.segment-card.uninspected { border-left-color: #98a2b3; }
+.segment-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.segment-head h3 { margin: 0; font-size: 15px; }
+.rising-badge { background: #d92d20; color: #fff; font-size: 11px; border-radius: 4px; padding: 2px 6px; }
+.latest-grade { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.grade-compare { font-size: 12px; color: var(--muted); }
+.arrow-up { color: #d92d20; font-style: normal; font-weight: 700; }
+.arrow-flat { color: var(--muted); font-style: normal; }
+.latest-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 0 0 10px; }
+.latest-meta dt { font-size: 11px; color: var(--muted); }
+.latest-meta dd { margin: 2px 0 0; font-size: 12px; }
+.history-line { list-style: none; margin: 0; padding: 8px 0 0; border-top: 1px dashed var(--border); }
+.history-item + .history-item { margin-top: 4px; }
+.history-link { display: flex; align-items: center; gap: 8px; width: 100%; border: none; background: none; padding: 4px 0; cursor: pointer; font-size: 12px; text-align: left; }
+.history-link:hover .history-date { color: var(--brand); }
+.history-date { min-width: 88px; color: #334155; }
+.segment-empty { color: var(--muted); font-size: 13px; background: #f8fafc; border-radius: 6px; padding: 12px; text-align: center; }
+
+.grade-badge { display: inline-block; border-radius: 4px; padding: 1px 8px; font-style: normal; font-size: 12px; line-height: 18px; background: #e2e8f0; color: #334155; white-space: nowrap; }
+.grade-badge.sm { font-size: 11px; padding: 0 6px; }
+.grade-badge.lg { font-size: 15px; line-height: 24px; padding: 2px 12px; font-weight: 600; }
+.grade-1 { background: #ecfdf3; color: #027a48; }
+.grade-2 { background: #fffaeb; color: #b54708; }
+.grade-3 { background: #fff4ed; color: #c4320a; }
+.grade-4 { background: #fef3f2; color: #b42318; }
+.archive-hint { color: var(--muted); font-size: 11px; font-style: normal; }
+.return-tag { background: #fee4e2; color: #b42318; border-radius: 4px; padding: 0 6px; font-size: 11px; font-style: normal; }
+.pending-tag { color: #b54708; background: #fffaeb; border-radius: 4px; padding: 0 6px; font-size: 11px; font-style: normal; }
+.recalc-tag { color: var(--brand); font-size: 11px; margin-left: 6px; font-style: normal; }
+.archive-tag { color: #027a48; font-style: normal; }
+.status-pill { border-radius: 10px; padding: 1px 8px; font-size: 11px; white-space: nowrap; }
+.st-pending { background: #f1f5f9; color: #475569; }
+.st-running { background: #eff6ff; color: #1f6feb; }
+.st-done { background: #ecfdf3; color: #027a48; }
+.st-return, .status-pill.returned { background: #fee4e2; color: #b42318; }
+
+.detail-panel { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; }
+.detail-head { display: flex; justify-content: space-between; align-items: center; }
+.detail-title { margin: 12px 0; font-size: 17px; }
+.detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.detail-item span { display: block; font-size: 12px; color: var(--muted); margin-bottom: 2px; }
+.detail-item strong { font-size: 14px; font-weight: 600; }
+.detail-actions { display: flex; gap: 8px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
+
+.modal-mask { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); display: flex; align-items: center; justify-content: center; z-index: 20; }
+.modal { background: #fff; border-radius: 8px; padding: 18px 20px; width: 420px; max-width: calc(100vw - 32px); }
+.modal h3 { margin: 0 0 12px; }
+.modal-item { display: block; margin-bottom: 10px; }
+.modal-item span { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.modal-item i { color: #d92d20; font-style: normal; margin-left: 2px; }
+.modal-item input { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }

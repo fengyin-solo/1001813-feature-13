@@ -1,4 +1,4 @@
-"""内窥检测接口：维护检测报告，覆盖安排检测、确认出具、退回重检等动作。"""
+"""内窥检测接口：检测报告、管段分组报告、待复核清单与等级判定口径。"""
 from __future__ import annotations
 
 from typing import Any
@@ -14,6 +14,43 @@ service = CctvService()
 
 LIST_FIELDS = ["检测编号", "检测管段", "检测设备", "检测长度", "缺陷等级", "检测人员", "检测日期", "检测状态"]
 STATUSES = ["待检测", "检测中", "已出具", "已退回"]
+
+
+@router.get("/summary")
+def summary() -> dict[str, Any]:
+    """内窥检测页头汇总：与列表、分组报告共用同一份行数据现算，条数始终一致。"""
+    return service.summary()
+
+
+@router.get("/segments")
+def segment_report() -> dict[str, Any]:
+    """按检测管段分组的检测报告：最近结论、历次检测对比、等级上升标记。"""
+    return service.segment_report()
+
+
+@router.get("/review-queue", response_model=PageResult[dict])
+def review_queue() -> PageResult[dict]:
+    """待复核清单：只收退回重检的报告，条数随重算实时变化。"""
+    items, total = service.review_queue()
+    return PageResult(items=items, total=total, page=1, size=max(total, 1))
+
+
+@router.get("/grade-versions")
+def grade_versions() -> dict[str, Any]:
+    """等级判定口径版本列表与当前启用版本。"""
+    return service.grade_versions()
+
+
+@router.post("/grade-versions/activate", response_model=ActionResult)
+def activate_grade_version(payload: EntryPayload) -> ActionResult:
+    """切换判定口径：已出具的报告留档不变，未出结论的报告随后按新口径重算。"""
+    version_id = str(payload.values.get("version") or "").strip()
+    result = service.activate_version(version_id)
+    if result is None:
+        return ActionResult(ok=False, message=f"判定口径「{version_id}」不存在")
+    result = service.grade_versions()
+    version_name = next(version["name"] for version in result["versions"] if version["id"] == result["active"])
+    return ActionResult(ok=True, message=f"已切换为{version_name}，未出结论的报告已按新口径重算")
 
 
 @router.get("", response_model=PageResult[dict])
