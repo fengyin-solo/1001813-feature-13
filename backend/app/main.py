@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.routers import ROUTERS
+from app.routers.cctv import service as cctv_service
 from app.store import store
 
 app = FastAPI(title="城市地下管网巡检养护平台", version="1.0.0")
@@ -34,5 +35,15 @@ def health() -> dict[str, object]:
 
 @app.get("/api/overview")
 def overview() -> dict[str, object]:
-    """运营概览：把各业务模块的待处理量汇总成看板卡片。"""
-    return store.overview()
+    """运营概览：把各业务模块的待处理量汇总成看板卡片。
+
+    内窥检测的条数直接取检测服务的统一计数，保证运营概览与检测列表始终一致。
+    """
+    data = store.overview()
+    for item in data["modules"]:
+        if item["name"] == "cctv":
+            item["created"] = cctv_service.count_entries()
+    for card in data["cards"]:
+        if card["label"] == "今日新增":
+            card["value"] = sum(int(item["created"]) for item in data["modules"])
+    return data

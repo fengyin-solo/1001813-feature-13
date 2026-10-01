@@ -1,4 +1,4 @@
-"""内窥检测接口：维护检测报告，覆盖安排检测、确认出具、退回重检等动作。"""
+"""内窥检测接口：平铺检测列表、按管段分组的检测报告、待复核清单与判定口径。"""
 from __future__ import annotations
 
 from typing import Any
@@ -28,6 +28,35 @@ def list_entries(
         raise HTTPException(status_code=400, detail="每页最多 200 条，请缩小分页范围")
     items, total = service.list_entries(keyword=keyword, status=status, page=page, size=size)
     return PageResult(items=items, total=total, page=page, size=size)
+
+
+@router.get("/grouped")
+def grouped_report() -> dict[str, Any]:
+    """按管段分组的检测报告：最近结论、历次对比、上升标记与汇总数量随数据实时计算。"""
+    return service.grouped_report()
+
+
+@router.get("/review")
+def review_list() -> dict[str, Any]:
+    """待复核清单：仅列出已退回重检的报告，条数与退回动作同步。"""
+    items, total = service.review_list()
+    return {"items": items, "total": total}
+
+
+@router.get("/grading")
+def grading_overview() -> dict[str, Any]:
+    """读取缺陷等级判定口径：当前生效版本与各版本阈值。"""
+    return service.grading_overview()
+
+
+@router.post("/grading/actions")
+def switch_grading(payload: EntryPayload) -> ActionResult:
+    """切换判定口径版本：未出结论的检测按新口径重算，已出具的按原版本留档。"""
+    version = str(payload.values.get("version") or "").strip()
+    overview, message = service.switch_version(version)
+    if overview is None:
+        return ActionResult(ok=False, message=message)
+    return ActionResult(ok=True, message=message, entry=overview)
 
 
 @router.get("/{entry_id}", response_model=dict)
